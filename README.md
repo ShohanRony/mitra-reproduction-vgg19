@@ -146,3 +146,9 @@ Git history. Update REPORT.md only from actual outputs and a verified reference.
 
 Original harness code: MIT, see LICENSE. External code/data/paper retain their own
 licenses. No third-party model code, weights or dataset images are bundled.
+
+## Resumed attempt
+
+The 20 September 2026 recheck reproduced the same environmental blocker.
+See [resumed status](docs/resumed_status.md) and `results/resumed-attempt/`
+for the new raw checks and failed command. No trained-model result was produced.

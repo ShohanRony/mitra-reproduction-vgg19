@@ -63,3 +63,9 @@ support claiming a validated experimental pipeline in a scholarship proposal.
 
 The delivered folder is a committed local Git repository packaged as a ZIP.
 It has not been published to GitHub; GitHub connection is required for that step.
+
+## Resumed attempt
+
+The 20 September 2026 recheck reproduced the same environmental blocker.
+See [resumed status](docs/resumed_status.md) and `results/resumed-attempt/`
+for the new raw checks and failed command. No trained-model result was produced.
