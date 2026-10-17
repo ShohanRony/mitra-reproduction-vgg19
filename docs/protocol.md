@@ -1,11 +1,12 @@
 # What was reproduced, and what differs
 
 This is an independent reconstruction of the weight-pruning experiment in
-Mitra, Schwalbe & Klein (2024) ("Reliability of deep learning under
-distribution shift" — see `docs/sources.md` for the exact text accessed), not
-a run of the authors' own code or checkpoints. The authors have not (as far
-as this search could determine) published their experiment code; see
-`docs/sources.md` item 6.
+Mitra, Schwalbe & Klein (2024), *"Investigating Calibration and Corruption
+Robustness of Post-hoc Pruned Perception CNNs: An Image Classification
+Benchmark Study"* (CVPR Workshops 2024) — see `docs/sources.md` for the exact
+text accessed — not a run of the authors' own code or checkpoints. The
+authors have not (as far as this search could determine) published their
+experiment code; see `docs/sources.md` item 6.
 
 ## What matches the paper's stated protocol
 
