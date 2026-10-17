@@ -1,5 +1,10 @@
 # Resumed attempt — 20 September 2026 UTC
 
+> **Superseded**: this describes the first attempt (2026-09-20), which was
+> blocked by a missing GPU environment. The completed 3-seed results are in
+> [results/cross_seed_report.md](../results/cross_seed_report.md) and the
+> [README](../README.md).
+
 The user requested continuation from the completed metric checks and blocked CNN command.
 
 - Reopened the paper's full-text HTML and checked the experimental specification.
