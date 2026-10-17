@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this reconstruction, please cite both this repository and the paper it reconstructs."
+title: "Independent reconstruction of Mitra, Schwalbe & Klein (2024) VGG-19-BN weight-pruning experiment"
+authors:
+  - family-names: "Shohan"
+    given-names: "Shohinur Pervez"
+date-released: 2026-10-17
+license: MIT
+repository-code: "https://github.com/ShohanRony/mitra-reproduction-vgg19"
+references:
+  - type: article
+    title: "Investigating Calibration and Corruption Robustness of Post-hoc Pruned Perception CNNs: An Image Classification Benchmark Study"
+    authors:
+      - family-names: "Mitra"
+        given-names: "Pallavi"
+      - family-names: "Schwalbe"
+        given-names: "Gesina"
+      - family-names: "Klein"
+        given-names: "Nadja"
+    year: 2024
+    url: "https://arxiv.org/abs/2405.20876"

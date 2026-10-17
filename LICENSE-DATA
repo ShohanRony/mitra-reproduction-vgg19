@@ -1,0 +1,14 @@
+Results and data files in this repository (everything under results/, timing/,
+provenance/, and configs/) are licensed under Creative Commons Attribution 4.0
+International (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+Code (everything else) is licensed under MIT; see LICENSE.
+
+CIFAR-10 and CIFAR-10-C themselves are not included in this repository (see
+README.md "Datasets and checkpoints" section) and retain their own original
+licenses/terms from their respective sources.
+
+The vendored upstream model/pruning code this reconstruction depends on
+(Eric-mingjie/rethinking-network-pruning, MIT License, Copyright (c) 2018
+Mingjie Sun) is not included in this repository either (see
+docs/protocol.md); clone it separately per README.md if you need it.

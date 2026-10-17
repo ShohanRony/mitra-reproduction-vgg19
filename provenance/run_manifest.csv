@@ -1,0 +1,7 @@
+seed,arm,upstream_revision,utc_start,utc_completed,baseline_checkpoint_sha256,pruned30_recovered_checkpoint_sha256
+1,baseline+pruned30_recovered,2ac473d70a09810df888e932bb394f225f9ed2d1,2026-09-20T13:40:57.403933+00:00,2026-09-20T13:57:11.752810+00:00,0a51455a3281fc7744a44e39bdb267bf9aa3cec0e7665b72bc78ef558bcc67ad,b2de735675b6472649f9feabf8dec7de886e1d781d8d45ea6c7aabb4b87499ca
+2,baseline+pruned30_recovered,2ac473d70a09810df888e932bb394f225f9ed2d1,2026-09-20T14:15:30.095585+00:00,2026-09-20T18:18:49.556693+00:00,bde7de67a380f5d1d26ee48cdaa7bcc3d16517e4f29609ccdf781beed5a965d3,a04068780de5cdd1ba455f05a598350af0a33eb024606f08c70624be3fd5536d
+3,baseline+pruned30_recovered,2ac473d70a09810df888e932bb394f225f9ed2d1,2026-09-20T18:19:17.146731+00:00,2026-09-20T22:20:41.023186+00:00,34338f88476664a1c33af6848ff1a23bec41ff16046f9812632f06f8ae389480,1d8fbde0d4f1a0cf1d56296378e4742886d2d8f7bf67f393964bd9db35fd244f
+
+# commit hash of this repo's code at run time: not recorded at run time (code lived in a 2-commit local repo, not referenced by the run itself).
+# The results-commit hash that first adds these files to this public repo can be found via: git log --follow -- results/seed1/results.json

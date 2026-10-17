@@ -1,6 +1,6 @@
 {
   "kind": "synthetic_metric_test_not_paper_reproduction",
-  "numpy_version": "2.3.5",
+  "numpy_version": "1.26.4",
   "expected": {
     "equal_mass": 0.275,
     "equal_width": 0.125

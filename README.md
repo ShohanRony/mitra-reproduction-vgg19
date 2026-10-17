@@ -1,154 +1,132 @@
-# Mitra 2024 pruning and calibration reproduction attempt
+# Mitra, Schwalbe & Klein (2024) VGG-19-BN pruning reconstruction
 
-**Status: execution blocked. No trained-model reproduction result is available.**
-The CNN command was executed and failed because PyTorch is absent. The execution
-environment has no exposed NVIDIA GPU; package, dataset and source downloads
-returned HTTP 403. This is not evidence that an RTX 3050 cannot run the experiment.
-Nine NumPy metric checks passed; one PyTorch pruning check was skipped.
-Synthetic metric outputs are never used as paper comparison results.
+**This is an independent reconstruction built from the paper's text, not the
+authors' released code.** Mitra, Pallavi, Gesina Schwalbe, and Nadja Klein,
+*"Investigating Calibration and Corruption Robustness of Post-hoc Pruned
+Perception CNNs: An Image Classification Benchmark Study"* (CVPR Workshops,
+2024). [arXiv](https://arxiv.org/abs/2405.20876). No author code for this
+experiment was found during the source audit in `docs/sources.md`.
 
-Target: Pallavi Mitra, Gesina Schwalbe and Nadja Klein (2024),
-*Investigating Calibration and Corruption Robustness of Post-hoc Pruned Perception
-CNNs: An Image Classification Benchmark Study*, CVPR Workshops.
-[arXiv full text](https://arxiv.org/html/2405.20876v1)
-and [PDF](https://arxiv.org/pdf/2405.20876).
+## What this is, in plain terms
 
-Read [REPORT.md](REPORT.md), [paper setup](docs/paper_setup.md),
-[explicit assumptions](docs/assumptions.md), and [source audit](docs/sources.md).
-This is an independent reconstruction harness, not the authors' released code.
-The actual upstream model definition, training and CUDA path could not be tested.
-The repository must not be advertised as a successful reproduction.
+- VGG-19-BN trained on CIFAR-10, then pruned 30% (global unstructured L1 on
+  convolution weights) and recovery-trained, run for **3 independent seeds**.
+- Evaluated on clean CIFAR-10 test data and all 15 CIFAR-10-C corruption
+  types at all 5 severities.
+- **3 seeds is a pilot, not a confirmatory study.** No p-value is reported
+  anywhere in this repository. The one finding that is directionally
+  consistent across all 3 seeds and all 6 clean+severity conditions
+  (pruning makes calibration slightly worse) is reported as suggestive, not
+  proven — see `results/cross_seed_report.md` and `VERIFICATION.md`.
+- **The baseline model trains for 160 epochs; the pruned model trains for
+  160 + 40 = 200 epochs.** There is no matched-training dense control run
+  for 200 epochs without pruning, so this reconstruction cannot yet rule out
+  "more total training" as the cause of the small calibration difference
+  instead of pruning itself. That control is listed as planned future work
+  in `docs/protocol.md`, not run here.
+- **AI coding assistants were used to write code in this repository.** Every
+  reported number was checked against the raw log/metric files it came
+  from — see `VERIFICATION.md` for the line-by-line check.
+- **Datasets and model checkpoints are not included** in this repository
+  (see "Datasets and checkpoints" below). SHA-256 hashes are provided so
+  anyone can verify they're using the same files.
 
-## Selected configuration
+## Results summary (3 seeds, mean ± SD)
 
-VGG-19-BN from the Liu repository referenced by the paper; CIFAR-10; baseline plus
-30% global L1 pruning of convolution weights; masked weights remain zero during
-40 recovery epochs. No structured tensor surgery or sparsity acceleration is
-claimed. ECE is aggregate top-label ECE with ten bins; equal-mass is primary and
-equal-width is also recorded because the paper is internally inconsistent.
+| Metric | Baseline | Pruned 30% + recovery | Plain difference |
+|---|---|---|---|
+| Clean accuracy | 0.9372 ± 0.0010 | 0.9375 ± 0.0011 | +0.0003 (not consistent in sign across seeds — no detectable effect) |
+| Clean ECE (equal-mass) | 0.0472 ± 0.0012 | 0.0480 ± 0.0007 | +0.0008 (pruned worse; consistent in all 3 seeds, not labeled significant) |
+| Corruption mPC (severity 1 → 5) | 0.8678 → 0.5655 | 0.8670 → 0.5607 | small, inconsistent in sign at 3 of 5 severities |
+| Pooled corruption ECE (all 5 severities) | lower at every severity | higher at every severity | consistent across all 3 seeds, all 5 severities (6/6 conditions) |
 
-The first meaningful experiment needs 160 baseline epochs plus 40 recovery epochs.
-Run a single seed first. Three independent seeds are needed to approximate the
-paper's mean-and-standard-deviation design; a single seed is a pilot.
-This harness intentionally does not substitute a ResNet-18 or ImageNet VGG.
+Full numbers, per-seed breakdowns, and statistics: `results/cross_seed_report.md`
+and `results/summary.csv`. Full claim-by-claim check against the raw files:
+`VERIFICATION.md`.
 
-## Setup on the target laptop
+## Repository layout
 
-Use Python 3.11 or 3.12 and an NVIDIA driver compatible with the selected CUDA
-wheel. Commands below are Bash; on Windows use an appropriate Python environment
-and the corresponding activation syntax. No GPU runtime was measured here.
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
-python -m pip install -r requirements.txt
-git clone https://github.com/Eric-mingjie/rethinking-network-pruning.git external/rethinking-network-pruning
-git -C external/rethinking-network-pruning rev-parse HEAD
+```
+src/            training/pruning/evaluation code, ECE metrics (src/metrics.py)
+scripts/        environment checks, metric unit-test runner
+tests/          unit tests for the metrics and pruning-mask logic
+configs/        exact hyperparameters used (configs/vgg19_bn_pruning30.json)
+results/        per-seed manifests, epoch logs, metrics, pruning stats, summary.csv
+                (checkpoints and per-example predictions are NOT committed — see below)
+timing/         per-epoch wall-clock time for VGG-19-BN / ResNet-18 / MobileNetV3-Small
+provenance/     checksums.sha256, run_manifest.csv, file_timestamps.csv
+docs/           protocol.md, deviations.md, assumptions.md, paper_setup.md, sources.md
+environment.md  hardware / OS / CUDA / PyTorch versions actually used
+VERIFICATION.md line-by-line check of every claim above against raw files
 ```
 
-Inspect the upstream model and record its full commit as `UPSTREAM_COMMIT` in the
-commands below. An author-used commit was not identified. The runner rejects a
-dirty checkout or a different commit and records source hashes. Modern PyTorch
-compatibility of the old upstream package remains unverified; preserve and report
-any compatibility failure rather than silently changing architectures.
+## Setup
 
 ```bash
-UPSTREAM_COMMIT=$(git -C external/rethinking-network-pruning rev-parse HEAD)
-python scripts/run_checks.py
-python scripts/metric_checks.py
-python scripts/check_environment.py --output results/laptop-environment.json
-python run_experiment.py --upstream external/rethinking-network-pruning --upstream-revision "$UPSTREAM_COMMIT" --download --device cuda --out results/laptop-preflight --preflight-only
-python run_experiment.py --upstream external/rethinking-network-pruning --upstream-revision "$UPSTREAM_COMMIT" --download --device cuda --seed 1 --out results/seed1
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+git clone https://github.com/Eric-mingjie/rethinking-network-pruning external/rethinking-network-pruning
+cd external/rethinking-network-pruning && git checkout 2ac473d70a09810df888e932bb394f225f9ed2d1 && cd ../..
 ```
 
-Preflight performs one real CIFAR batch forward/backward pass and records peak
-allocated GPU memory. It does not establish training convergence or paper agreement.
-Use separate output directories for preflight and training. An out-of-memory failure
-must be recorded; do not silently change the training batch size or use mixed precision.
-The fixed batch size is 64; images are 32x32. This is plausibly within 6GB for CIFAR
-VGG, but compatibility and memory have not been demonstrated on the user's laptop.
+Download CIFAR-10 (`torchvision.datasets.CIFAR10(..., download=True)`) and
+CIFAR-10-C from https://github.com/hendrycks/robustness into `data/`.
+Verify both against `provenance/checksums.sha256` before running anything.
 
-Epoch-boundary restart uses the same training command with `--resume`. The runner
-saves optimizer state, RNG states and a last-epoch checkpoint. Mid-epoch work is
-repeated after interruption. There is no shortened-training option masquerading as
-the paper experiment. Copy finished outputs before changing package versions.
-
-## Corruption evaluation
-
-Obtain the official CIFAR-10-C archive from the
-[benchmark repository](https://github.com/hendrycks/robustness) / its linked dataset
-record, extract it, and pass the directory containing `labels.npy` and corruption
-arrays. Do not generate approximate replacement corruptions.
+## Reproducing a seed
 
 ```bash
-python run_experiment.py --upstream external/rethinking-network-pruning --upstream-revision "$UPSTREAM_COMMIT" --device cuda --seed 1 --out results/seed1 --resume --cifar-c data/CIFAR-10-C
+python run_experiment.py --upstream external/rethinking-network-pruning \
+  --upstream-revision 2ac473d70a09810df888e932bb394f225f9ed2d1 \
+  --device cuda --seed 1 --out results/seed1 --cifar-c data/CIFAR-10-C
 ```
 
-All 15 standard corruption types and severities 1–5 are evaluated, using the
-appropriate 10,000-image slice. The four extra corruption types sometimes shipped
-in the archive are excluded. Arrays are memory-mapped, not all loaded into RAM.
-The runner records mean accuracy at each severity, mean per-corruption ECE,
-and pooled ECE separately. The paper does not resolve the last two ECE choices.
-No AlexNet-normalized mCE is used.
+Repeat with `--seed 2 --out results/seed2` and `--seed 3 --out results/seed3`.
+Each run needs ~4-5 GPU-hours on hardware comparable to `environment.md`.
 
-Repeat with `--seed 2 --out results/seed2` and seed 3 for independent baselines.
-An optional `--recovery-control` also trains an unpruned clone for 40 extra epochs
-to probe the extra-training confound. This is an extension, not a reported paper arm.
+## Running the evaluation only (no retraining)
 
-## Outputs and provenance
+The included checkpoints-not-uploaded can be re-evaluated against
+`src/metrics.py` to reproduce the numbers in `results/seed*/metrics/` exactly,
+provided the same determinism flags are set (`cudnn.deterministic = True`,
+`torch.use_deterministic_algorithms(True)`, TF32 disabled, see
+`environment.md`). This was done once against `results/seed1/checkpoints/baseline_last.pt`
+(not committed; checksum in `provenance/checksums.sha256`) during packaging
+and reproduced the recorded accuracy and ECE bit-for-bit.
 
-Each successful run saves:
+## Datasets and checkpoints
 
-- `manifest.json`: settings, upstream revision/source hashes, data hashes, versions,
-  device and completion status.
-- `epochs/*.json`: one training record per epoch.
-- `checkpoints/*_last.pt`: resumable local checkpoints, excluded from Git by default.
-- `predictions/<phase>/*.npz`: per-example probabilities, labels and indices.
-- `metrics/<phase>/*.json`: both ECE schemes, bin counts, accuracy and prediction hashes.
-- `pruning.json`: requested and achieved convolution-weight sparsity.
-- `results.json`: clean and optional severity-level corruption results.
-- `failure.json`: actual exception if execution fails.
+Not included in this repository (CIFAR-10, CIFAR-10-C, and all `.pt`
+checkpoints exceed the size and scope of a code/results repo). Download
+sources:
+- CIFAR-10: https://www.cs.toronto.edu/~kriz/cifar.html
+- CIFAR-10-C: https://github.com/hendrycks/robustness
 
-Stored ECE and accuracy values are fractions; multiply by 100 for percentage points.
-No energy measurement is included: reproducing calibration does not validate energy
-instrumentation. Test data are not used to choose checkpoints; this is a declared
-choice, because the author's checkpoint-selection rule was not available.
+SHA-256 checksums for both, and for every checkpoint produced by this
+reconstruction, are in `provenance/checksums.sha256`. Original filesystem
+modification times for every result file (so the git commit date is not
+mistaken for the measurement date) are in `provenance/file_timestamps.csv`.
 
-## Committed results in this delivery
+## Relationship to other repos
 
-`results/execution-attempt/environment.json` contains actual capability/network
-checks. `results/execution-attempt/model-run/failure.json` records the attempted CNN
-command. `results/metric-checks/` contains synthetic inputs, bin-level outputs,
-test log and test summary. `results/comparison.csv` uses empty fields, not invented
-numbers, where reference values or model measurements are unavailable.
-
-The included Git history commits these files. The ZIP contains a local Git
-repository; it has **not** been published to GitHub. After connecting GitHub, it can
-be published. With an authenticated GitHub CLI, the equivalent command is:
-
-```bash
-gh repo create mitra-calibration-reproduction --public --source . --remote origin --push
-```
-
-After real runs, commit small summaries and audit raw predictions explicitly:
-
-```bash
-git add results/seed1/manifest.json results/seed1/epochs results/seed1/metrics results/seed1/pruning.json results/seed1/results.json
-git add -f results/seed1/predictions
-git commit -m "Record actual seed 1 reproduction outputs"
-```
-
-Review individual file sizes first. Keep large weights and datasets outside ordinary
-Git history. Update REPORT.md only from actual outputs and a verified reference.
+- [`ShohanRony/green-ai-energy-phase1`](https://github.com/ShohanRony/green-ai-energy-phase1)
+  is a **separate study** (MAC counts vs. measured energy) and shares no
+  files with this repository.
+- An earlier energy-measurement harness (`energy-pilot`, not published) measured
+  0.0447 J/image, active draw 71-78W, using `nvmlDeviceGetTotalEnergyConsumption`.
+  That instrument over-reports by roughly 30% on this GPU at short polling
+  intervals (a 20ms-vs-500ms polling sweep showed implied power ranging from
+  291W down to 16W for the same idle GPU state — a driver/NVML quantization
+  artifact, not a real power swing). **Those numbers are superseded and
+  should not be cited.** Corrected energy measurement, if and when published,
+  will live under `ShohanRony/green-ai-energy-phase1`, not here.
 
 ## License
 
-Original harness code: MIT, see LICENSE. External code/data/paper retain their own
-licenses. No third-party model code, weights or dataset images are bundled.
-
-## Resumed attempt
-
-The 20 September 2026 recheck reproduced the same environmental blocker.
-See [resumed status](docs/resumed_status.md) and `results/resumed-attempt/`
-for the new raw checks and failed command. No trained-model result was produced.
+Code: MIT, see `LICENSE` (Copyright (c) 2026 Shohinur Pervez Shohan).
+Results and data files (`results/`, `timing/`, `provenance/`, `configs/`):
+CC BY 4.0, see `LICENSE-DATA`. The vendored upstream model/pruning code this
+reconstruction depends on (`Eric-mingjie/rethinking-network-pruning`) is not
+included in this repository and keeps its own MIT license — clone it
+separately per the Setup section above. CIFAR-10 / CIFAR-10-C are not
+included and retain their original dataset licenses/terms.

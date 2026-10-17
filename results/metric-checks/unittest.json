@@ -1,12 +1,7 @@
 {
   "tests_discovered": 10,
-  "passed": 9,
-  "skipped": [
-    {
-      "test": "test_mask_survives_optimizer_updates (test_torch_pruning.PruningTest.test_mask_survives_optimizer_updates)",
-      "reason": "PyTorch unavailable; pruning backend UNTESTED"
-    }
-  ],
+  "passed": 10,
+  "skipped": [],
   "failures": 0,
   "errors": 0,
   "cnn_pipeline_validated": false

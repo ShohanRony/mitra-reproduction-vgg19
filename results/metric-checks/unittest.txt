@@ -7,9 +7,9 @@ test_perfect (test_metrics.MetricsTest.test_perfect) ... ok
 test_probabilities (test_metrics.MetricsTest.test_probabilities) ... ok
 test_right_closed_boundaries (test_metrics.MetricsTest.test_right_closed_boundaries) ... ok
 test_ties_and_empty_bins (test_metrics.MetricsTest.test_ties_and_empty_bins) ... ok
-test_mask_survives_optimizer_updates (test_torch_pruning.PruningTest.test_mask_survives_optimizer_updates) ... skipped 'PyTorch unavailable; pruning backend UNTESTED'
+test_mask_survives_optimizer_updates (test_torch_pruning.PruningTest.test_mask_survives_optimizer_updates) ... ok
 
 ----------------------------------------------------------------------
-Ran 10 tests in 0.004s
+Ran 10 tests in 1.425s
 
-OK (skipped=1)
+OK

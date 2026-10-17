@@ -1,0 +1,36 @@
+# SHA-256 checksums for datasets and checkpoints that are NOT uploaded to this repo.
+# Datasets (CIFAR-10 raw, CIFAR-10-C) are identical across all three seeds (same download);
+# verify against results/seed{1,2,3}/manifest.json "dataset_sha256" / "cifar_c_sha256" fields.
+
+f962466ef690d46b226450fb9aadc74ba4bc64a76aa526b5827fe4bc5c7125cb  cifar-10-batches-py/batches.meta
+54636561a3ce25bd3e19253c6b0d8538147b0ae398331ac4a2d86c6d987368cd  cifar-10-batches-py/data_batch_1
+766b2cef9fbc745cf056b3152224f7cf77163b330ea9a15f9392beb8b89bc5a8  cifar-10-batches-py/data_batch_2
+0f00d98ebfb30b3ec0ad19f9756dc2630b89003e10525f5e148445e82aa6a1f9  cifar-10-batches-py/data_batch_3
+3f7bb240661948b8f4d53e36ec720d8306f5668bd0071dcb4e6c947f78e9682b  cifar-10-batches-py/data_batch_4
+d91802434d8376bbaeeadf58a737e3a1b12ac839077e931237e0dcd43adcb154  cifar-10-batches-py/data_batch_5
+4d1c3fb199d6a183ae03f5162b469d7bc04edf2fad9547bd5f224271d52f98e5  cifar-10-batches-py/readme.html
+f53d8d457504f7cff4ea9e021afcf0e0ad8e24a91f3fc42091b8adef61157831  cifar-10-batches-py/test_batch
+e6d972b1238665d8ef54aae5affe8e292dda1eb88a6840bf0f5988cdb649da7b  CIFAR-10-C/labels.npy
+269c7f8f1b896cb96cf194814171d0cfc6d73a1546cd718ba629756a906ecaf1  CIFAR-10-C/gaussian_noise.npy
+645936b5a5cf0b72151289c598b61b59429c917b346256e63d399a8c3a5ed078  CIFAR-10-C/shot_noise.npy
+9eaebc6e508ebe05382c2631177ca1503f6f3aea68090c509d24506f86b1164f  CIFAR-10-C/impulse_noise.npy
+6140f9954d10d5c606d598ca6e26d5d94a301894e94493035f03182f551b745e  CIFAR-10-C/defocus_blur.npy
+ec1586616c585b8f8742dc0003d9bebe07d822ed3c997b6215003d5afd66bdfa  CIFAR-10-C/glass_blur.npy
+34baad18726fabefeb69b5cbedefda41ee7969dbed1562740ef9e1095d5dd954  CIFAR-10-C/motion_blur.npy
+a3af830b0759addce9ac555f938643f3dcf2b9fef9df7f4479750a568c62006f  CIFAR-10-C/zoom_blur.npy
+84d3fdf8b17e18b7657804321dc13dd260ea1151c9bc91e55e13656e5f5410f2  CIFAR-10-C/snow.npy
+8be9ab8d9095b3fb3ebf4dd60f0a83651be115c3ac77c8adc5b3e0d3add5ad8c  CIFAR-10-C/frost.npy
+48f8f040b3aa25850119400ac2afacf72affdaaa3fcdd5daff425e876f996e50  CIFAR-10-C/fog.npy
+3bb5990e41b0212b62bc0b4385f4f95d68ecb94da627eacba4552381228a17c3  CIFAR-10-C/brightness.npy
+cb5e3765f52a172a380ce8c8c3096b78669d2f01f4f6e958ee30729f680bb9fb  CIFAR-10-C/contrast.npy
+664626e48ed03abec17614d2c7a2cf827bc82778e2319573c73a49a99ca0b21a  CIFAR-10-C/elastic_transform.npy
+6657f75ac66c907ad8206248bc1f48bef0dac219a1617f4dfd1b15e46ccf5ac7  CIFAR-10-C/pixelate.npy
+60bd735b9bba513df1f22adc460942de6ef03f9e5870340464db1fc7e6331d51  CIFAR-10-C/jpeg_compression.npy
+
+# Checkpoints (not uploaded) -- sha256, path, size
+0a51455a3281fc7744a44e39bdb267bf9aa3cec0e7665b72bc78ef558bcc67ad  results/seed1/checkpoints/baseline_last.pt  160441190 bytes
+b2de735675b6472649f9feabf8dec7de886e1d781d8d45ea6c7aabb4b87499ca  results/seed1/checkpoints/pruned30_recovered_last.pt  240524244 bytes
+bde7de67a380f5d1d26ee48cdaa7bcc3d16517e4f29609ccdf781beed5a965d3  results/seed2/checkpoints/baseline_last.pt  160441190 bytes
+a04068780de5cdd1ba455f05a598350af0a33eb024606f08c70624be3fd5536d  results/seed2/checkpoints/pruned30_recovered_last.pt  240524244 bytes
+34338f88476664a1c33af6848ff1a23bec41ff16046f9812632f06f8ae389480  results/seed3/checkpoints/baseline_last.pt  160441190 bytes
+1d8fbde0d4f1a0cf1d56296378e4742886d2d8f7bf67f393964bd9db35fd244f  results/seed3/checkpoints/pruned30_recovered_last.pt  240524244 bytes
