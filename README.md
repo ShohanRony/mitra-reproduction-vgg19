@@ -112,14 +112,13 @@ mistaken for the measurement date) are in `provenance/file_timestamps.csv`.
 - [`ShohanRony/green-ai-energy-phase1`](https://github.com/ShohanRony/green-ai-energy-phase1)
   is a **separate study** (MAC counts vs. measured energy) and shares no
   files with this repository.
-- An earlier energy-measurement harness (`energy-pilot`, not published) measured
-  0.0447 J/image, active draw 71-78W, using `nvmlDeviceGetTotalEnergyConsumption`.
-  That instrument over-reports by roughly 30% on this GPU at short polling
-  intervals (a 20ms-vs-500ms polling sweep showed implied power ranging from
-  291W down to 16W for the same idle GPU state — a driver/NVML quantization
-  artifact, not a real power swing). **Those numbers are superseded and
-  should not be cited.** Corrected energy measurement, if and when published,
-  will live under `ShohanRony/green-ai-energy-phase1`, not here.
+- An earlier, unpublished harness (`energy-pilot`) reported 0.0447 J/image and
+  active draw of 71-78W using `nvmlDeviceGetTotalEnergyConsumption`. On this
+  GPU that counter over-reports active power by about 30% at every polling
+  interval, and it also produces a separate polling artifact (20ms → 291W
+  implied for an idle GPU). **Those numbers are superseded and should not be
+  cited.** Corrected measurements, using `nvmlDeviceGetPowerUsage`, are
+  published in [`ShohanRony/green-ai-energy-phase1`](https://github.com/ShohanRony/green-ai-energy-phase1).
 
 ## License
 
