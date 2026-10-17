@@ -76,7 +76,7 @@ def run(args):
     model_root = upstream / "cifar" / "weight-level"
     if not (model_root / "models").is_dir(): raise FileNotFoundError(model_root / "models")
     sys.path.insert(0, str(model_root))
-    upstream_models = importlib.import_module("models")
+    upstream_models = importlib.import_module("models.cifar")
     if not Path(upstream_models.__file__).resolve().is_relative_to(model_root):
         raise RuntimeError("Imported a conflicting models package")
     factory = getattr(upstream_models, "vgg19_bn")
